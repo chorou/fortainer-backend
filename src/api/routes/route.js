@@ -28,6 +28,72 @@ async function makeDockerRequest(apiPath, options = {}) {
 
 
 
+///////////////////////////////////////Route for containers////////////////////////////
+
+app.get('/containers', async (req, res) => {
+  try {
+    const containers = await makeDockerRequest('/containers/json');
+    res.json(containers);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+// Route pour créer et démarrer un conteneur à partir d'un RepoTag
+app.post('/containers', async (req, res) => {
+  try {
+    const { name, repoTag } = req.body;
+
+    // Vérifiez si le RepoTag est fourni
+    if (!repoTag) {
+      throw new Error('RepoTag de l\'image Docker non spécifié.');
+    }
+
+    // Utilisez la fonction makeDockerRequest pour obtenir l'ID de l'image à partir du RepoTag
+    const imageIdResponse = await makeDockerRequest(`/images/${repoTag}/json`, {
+      method: 'get',
+    });
+
+    const imageId = imageIdResponse.Id;
+
+    // Utilisez l'ID de l'image pour créer le conteneur
+    const createContainerResponse = await makeDockerRequest('/containers/create', {
+      method: 'post',
+      data: {
+        name,
+        Image: imageId,
+      },
+    });
+
+    // Démarrer le conteneur créé
+    const startContainerResponse = await makeDockerRequest(`/containers/${createContainerResponse.Id}/start`, {
+      method: 'post',
+    });
+
+    res.json(createContainerResponse);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+
+
+app.delete('/containers/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const removeContainerResponse = await makeDockerRequest(`/containers/${id}`, {
+      method: 'delete',
+    });
+
+    res.json(removeContainerResponse);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+
+
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
