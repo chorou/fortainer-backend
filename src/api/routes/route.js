@@ -94,6 +94,81 @@ app.delete('/containers/:id', async (req, res) => {
 
 
 
+//////////////////////////////////// Route for images//////////////////////////////////
+
+app.get('/images', async (req, res) => {
+  try {
+    const images = await makeDockerRequest('/images/json');
+    res.json(images);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+app.post('/images', async (req, res) => {
+  try {
+    const { imageName } = req.body;
+    const pullImageResponse = await makeDockerRequest(`/images/create?fromImage=${imageName}`, {
+      method: 'post',
+    });
+
+    res.json(pullImageResponse);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+app.delete('/images/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const removeImageResponse = await makeDockerRequest(`/images/${id}`, {
+      method: 'delete',
+    });
+
+    res.json(removeImageResponse);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+
+// Route pour lister les RepoTags des images Docker existantes
+app.get('/images/list', async (req, res) => {
+  try {
+    // Utilisez la fonction makeDockerRequest pour récupérer la liste des images avec les RepoTags
+    const listImagesResponse = await makeDockerRequest('/images/json?all=0', {
+      method: 'get',
+    });
+
+    // Extrait les RepoTags de la réponse
+    const repoTags = listImagesResponse.map((image) => image.RepoTags).flat();
+
+    res.json(repoTags);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+
+
+// Route pour récupérer une image par son ID
+app.get('/images/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+   const getImageResponse = await makeDockerRequest(`/images/${id}/json`, {
+      method: 'get',
+    });
+
+    res.json(getImageResponse);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+
+
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
