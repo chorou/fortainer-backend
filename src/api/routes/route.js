@@ -167,6 +167,49 @@ app.get('/images/:id', async (req, res) => {
   }
 });
 
+/////////////////////////////////////////////// Route for networks/////////////////////
+
+app.get('/networks', async (req, res) => {
+  try {
+    const networks = await makeDockerRequest('/networks');
+    res.json(networks);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+app.post('/networks', async (req, res) => {
+  try {
+    const { name } = req.body;
+    const createNetworkResponse = await makeDockerRequest('/networks/create', {
+      method: 'post',
+      data: {
+        Name: name,
+      },
+    });
+
+    res.json(createNetworkResponse);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+app.delete('/networks/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const removeNetworkResponse = await makeDockerRequest(`/networks/${id}`, {
+      method: 'delete',
+    });
+
+    res.json(removeNetworkResponse);
+  } catch (error) {
+    res.status(error.response?.status || 500).json({ error: error.message });
+  }
+});
+
+
+
 
 
 app.listen(3000, () => {
