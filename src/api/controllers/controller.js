@@ -84,3 +84,71 @@ const containerController = {
   },
 };
 
+
+// Contrôleur pour les routes des images
+const imageController = {
+  getImages: async (req, res) => {
+    try {
+      const images = await makeDockerRequest('/images/json');
+      res.json(images);
+    } catch (error) {
+      res.status(error.response?.status || 500).json({ error: error.message });
+    }
+  },
+
+  pullImage: async (req, res) => {
+    try {
+      const { imageName } = req.body;
+      const pullImageResponse = await makeDockerRequest(`/images/create?fromImage=${imageName}`, {
+        method: 'post',
+      });
+
+      res.json(pullImageResponse);
+    } catch (error) {
+      res.status(error.response?.status || 500).json({ error: error.message });
+    }
+  },
+
+  deleteImage: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const removeImageResponse = await makeDockerRequest(`/images/${id}`, {
+        method: 'delete',
+      });
+
+      res.json(removeImageResponse);
+    } catch (error) {
+      res.status(error.response?.status || 500).json({ error: error.message });
+    }
+  },
+
+  listRepoTags: async (req, res) => {
+    try {
+      const listImagesResponse = await makeDockerRequest('/images/json?all=0', {
+        method: 'get',
+      });
+
+      const repoTags = listImagesResponse.map((image) => image.RepoTags).flat();
+
+      res.json(repoTags);
+    } catch (error) {
+      res.status(error.response?.status || 500).json({ error: error.message });
+    }
+  },
+
+  getImageById: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const getImageResponse = await makeDockerRequest(`/images/${id}/json`, {
+        method: 'get',
+      });
+
+      res.json(getImageResponse);
+    } catch (error) {
+      res.status(error.response?.status || 500).json({ error: error.message });
+    }
+  },
+};
+
