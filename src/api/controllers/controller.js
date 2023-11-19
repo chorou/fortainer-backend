@@ -152,3 +152,53 @@ const imageController = {
   },
 };
 
+
+// Contrôleur pour les routes des réseaux
+const networkController = {
+  getNetworks: async (req, res) => {
+    try {
+      const networks = await makeDockerRequest('/networks');
+      res.json(networks);
+    } catch (error) {
+      res.status(error.response?.status || 500).json({ error: error.message });
+    }
+  },
+
+  createNetwork: async (req, res) => {
+    try {
+      const { name } = req.body;
+      const createNetworkResponse = await makeDockerRequest('/networks/create', {
+        method: 'post',
+        data: {
+          Name: name,
+        },
+      });
+
+      res.json(createNetworkResponse);
+    } catch (error) {
+      res.status(error.response?.status || 500).json({ error: error.message });
+    }
+  },
+
+  deleteNetwork: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const removeNetworkResponse = await makeDockerRequest(`/networks/${id}`, {
+        method: 'delete',
+      });
+
+      res.json(removeNetworkResponse);
+    } catch (error) {
+      res.status(error.response?.status || 500).json({ error: error.message });
+    }
+  },
+};
+
+module.exports = {
+  containerController,
+  imageController,
+  networkController,
+};
+
+
