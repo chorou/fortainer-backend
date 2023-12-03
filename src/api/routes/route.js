@@ -35,7 +35,10 @@ async function makeDockerRequest(apiPath, options = {}) {
 // Get information about all containers
 app.get('/containers', async (req, res) => {
   try {
+    // Make a Docker API request to get information about all containers
     const containers = await makeDockerRequest('/containers/json');
+
+    // Send the container information as JSON response
     res.json(containers);
   } catch (error) {
     // Handle errors and send appropriate status and message
@@ -46,6 +49,7 @@ app.get('/containers', async (req, res) => {
 // Route to create and start a container from a RepoTag
 app.post('/containers', async (req, res) => {
   try {
+    // Extract name and repoTag from the request body
     const { name, repoTag } = req.body;
 
     // Check if RepoTag is provided
@@ -58,6 +62,7 @@ app.post('/containers', async (req, res) => {
       method: 'get',
     });
 
+    // Extract the image ID from the response
     const imageId = imageIdResponse.Id;
 
     // Use the image ID to create the container
@@ -74,8 +79,10 @@ app.post('/containers', async (req, res) => {
       method: 'post',
     });
 
+    // Send the response from creating the container as JSON
     res.json(createContainerResponse);
   } catch (error) {
+    // Handle errors and send appropriate status and message
     res.status(error.response?.status || 500).json({ error: error.message });
   }
 });
@@ -83,15 +90,18 @@ app.post('/containers', async (req, res) => {
 // Delete a container
 app.delete('/containers/:id', async (req, res) => {
   try {
+    // Extract the container ID from the request parameters
     const { id } = req.params;
 
-    // Remove the specified container
+    // Remove the specified container using Docker API request
     const removeContainerResponse = await makeDockerRequest(`/containers/${id}`, {
       method: 'delete',
     });
 
+    // Send the response from deleting the container as JSON
     res.json(removeContainerResponse);
   } catch (error) {
+    // Handle errors and send appropriate status and message
     res.status(error.response?.status || 500).json({ error: error.message });
   }
 });
