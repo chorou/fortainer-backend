@@ -105,6 +105,7 @@ The server will be running on http://localhost:3000.
 - **Expected Result:**
   - Status: 200 OK
   - Response Body: List of Docker containers
+  ![Alt text](get_containers.png)
 
 #### 2. Create Container
 
@@ -120,6 +121,8 @@ The server will be running on http://localhost:3000.
   - Status: 200 OK
   - Response Body: Information about the created container
 
+  ![Alt text](/postman_screens/create_container.png)
+
 #### 3. Delete Container
 
 - **Endpoint:** DELETE http://localhost:3000/containers/:id
@@ -127,6 +130,7 @@ The server will be running on http://localhost:3000.
   - Status: 200 OK
   - Response Body: Information about the removed container
 
+  ![Alt text](/postman_screens/delete_container.png)
 ### Images
 
 #### 1. Get Images
@@ -135,6 +139,8 @@ The server will be running on http://localhost:3000.
 - **Expected Result:**
   - Status: 200 OK
   - Response Body: List of Docker images
+
+  ![Alt text](/postman_screens/get_images.png)
 
 #### 2. Pull Image
 
@@ -145,6 +151,7 @@ The server will be running on http://localhost:3000.
     "imageName": "nginx:latest"
   }
   ```
+  ![Alt text](/postman_screens/pull_image.png)
 - **Expected Result:**
   - Status: 200 OK
   - Response Body: Information about the pulled image
@@ -156,6 +163,8 @@ The server will be running on http://localhost:3000.
   - Status: 200 OK
   - Response Body: Information about the removed image
 
+  ![Alt text](/postman_screens/delete_image.png)
+
 #### 4. List RepoTags
 
 - **Endpoint:** GET http://localhost:3000/images/list
@@ -165,12 +174,16 @@ The server will be running on http://localhost:3000.
 
  Docker images
 
+ ![Alt text](/postman_screens/get_list_image.png)
+
 #### 5. Get Image by ID
 
 - **Endpoint:** GET http://localhost:3000/images/:id
 - **Expected Result:**
   - Status: 200 OK
   - Response Body: Information about the specified image
+
+  ![Alt text](/postman_screens/get_image_by_id_image.png)
 
 ### Networks
 
@@ -180,6 +193,8 @@ The server will be running on http://localhost:3000.
 - **Expected Result:**
   - Status: 200 OK
   - Response Body: List of Docker networks
+
+  ![Alt text](/postman_screens/get_networks.png)
 
 #### 2. Create Network
 
@@ -194,10 +209,15 @@ The server will be running on http://localhost:3000.
   - Status: 200 OK
   - Response Body: Information about the created network
 
+  ![Alt text](/postman_screens/create_network.png)
+
 #### 3. Delete Network
 
 - **Endpoint:** DELETE http://localhost:3000/networks/:id
 - **Expected Result:**
   - Status: 200 OK
   - Response Body: Information about the removed network
+
+  ![Alt text](/postman_screens/delete_network.png)
+
 
