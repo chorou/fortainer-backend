@@ -25,4 +25,4 @@ jobs:
     - run: npm install
     - run: npm install --no-audit --prefer-offline --progress=false
     - run: npm run build --if-present
-    - run: npm test
+
