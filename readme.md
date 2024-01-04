@@ -75,6 +75,11 @@ Make sure you have the following installed:
 - Node.js
 - Docker (running and accessible)
 
+## Architecture
+
+![Alt text](/postman_screens/Diagram.png)
+
+
 ## Setup
 
 1. Clone the repository:
