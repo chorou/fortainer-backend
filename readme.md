@@ -77,7 +77,7 @@ Make sure you have the following installed:
 
 ## Architecture
 
-![Alt text](/postman_screens/Diagram.png)
+![Alt text](/postman_screens/diagram.png)
 
 
 ## Setup
