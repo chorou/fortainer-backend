@@ -9,9 +9,9 @@
     "yarn": "*"
   },
   "scripts": {
-    "prestart": "yarn docs",
-    "start": "cross-env NODE_ENV=production pm2 start ./src/index.js",
-    "dev": "nodemon ./src/index.js",
+    "prestart": "node ./src/generateApiKey.js || echo 'Failed to generate API key'",
+    "start": "cross-env NODE_ENV=production pm2 start ./src/app.js",
+    "dev": "nodemon ./src/app.js",
     "lint": "eslint ./src/ --ignore-path .gitignore --ignore-pattern internals/scripts",
     "lint:fix": "yarn lint --fix",
     "lint:watch": "yarn lint --watch",
@@ -26,7 +26,7 @@
     "deploy": "sh ./deploy.sh",
     "docs": "apidoc -i src -o docs",
     "postdocs": "open-cli docs/index.html",
-    "docker:start": "cross-env NODE_ENV=production pm2-docker start ./src/index.js",
+    "docker:start": "cross-env NODE_ENV=production pm2-docker start ./src/app.js",
     "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
     "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit"
@@ -62,6 +62,7 @@
     "compression": "^1.6.2",
     "cors": "^2.8.3",
     "cross-env": "^7.0.3",
+    "crypto": "^1.0.1",
     "dotenv-safe": "^8.2.0",
     "email-templates": "^6.0.3",
     "express": "^4.15.2",
