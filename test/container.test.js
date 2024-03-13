@@ -1,24 +1,20 @@
-// authMiddleware.test.js
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const { describe, it } = require('mocha');
+const { describe, it, before } = require('mocha');
 const dotenv = require('dotenv');
+const fs = require('fs');
+
 dotenv.config();
 const url = process.env.URL;
 
 chai.use(chaiHttp);
 const expect = chai.expect;
-const fs = require('fs');
-
 
 const containerPayLoad = {
   "Hostname": "cnt-test-01",
   "Cmd": ["date"],
   "Image": "ubuntu"
-}
-
-
-
+};
 
 describe('Containers list', () => {
   let containerId;
@@ -28,102 +24,75 @@ describe('Containers list', () => {
     apiKey = fs.readFileSync('api-key.txt', 'utf8').trim();
   });
 
-
   it('should create a new container', (done) => {
     chai.request(url)
-      .post('/containers/create') // Adjust path if needed
+      .post('/containers/create')
       .query({ name: 'container-' + Math.floor(Math.random() * 1000) + 100 })
       .set('x-api-key', apiKey)
       .send(containerPayLoad)
       .end((err, res) => {
         if (err) {
           console.error('Error:', err);
-          done(err);
-          return;
+          return done(err);
         }
-        // Assuming response contains container ID
-        containerId = res.body.Id; // Adjust based on actual response
-        expect(res).to.have.status(201); // Assuming 201 status for successful creation
+        if (res.statusCode !== 201) {
+          console.error('Error:', res.body);
+          return done(new Error('Failed to create container'));
+        }
+        containerId = res.body.Id;
         done();
       });
   });
 
   it('should check if the container exists', (done) => {
-    // Check if containerId is defined
     if (!containerId) {
-      done(new Error('Container ID is not defined.'));
-      return;
+      return done(new Error('Container ID is not defined.'));
     }
 
     chai.request(url)
-      .get(`/containers/${containerId}/json`) // Adjust path if needed
+      .get(`/containers/${containerId}/json`)
       .set('x-api-key', apiKey)
       .end((err, res) => {
         if (err) {
           console.error('Error:', err);
-          done(err);
-          return;
+          return done(err);
         }
-        // Assuming the response contains information about the container
-        expect(res.body).to.be.an('object'); // Assuming the response is an object
-        // Assert other conditions to verify the existence of the container
+        expect(res.statusCode).to.equal(200);
+        expect(res.body).to.be.an('object');
         done();
       });
   });
 
-
-  it('should return an array', (done) => {
-
+  it('should return an array of containers', (done) => {
     chai.request(url)
-      .get('/containers/json') // Adjust path if needed
+      .get('/containers/json')
       .set('x-api-key', apiKey)
       .end((err, res) => {
         if (err) {
           console.error('Error:', err);
-          done(err);
-          return;
+          return done(err);
         }
-        expect(res.body).to.be.a("array");
+        expect(res.statusCode).to.equal(200);
+        expect(res.body).to.be.an('array');
         done();
       });
   });
-
 
   it('should delete the created container', (done) => {
-    // Check if containerId is defined
     if (!containerId) {
-      done(new Error('Container ID is not defined.'));
-      return;
+      return done(new Error('Container ID is not defined.'));
     }
 
     chai.request(url)
-      .delete(`/containers/${containerId}`) // Adjust path if needed
+      .delete(`/containers/${containerId}`)
       .set('x-api-key', apiKey)
       .end((err, res) => {
         if (err) {
           console.error('Error:', err);
-          done(err);
-          return;
+          return done(err);
         }
-        expect(res).to.have.status(204); // Assuming 204 status for successful deletion
+        expect(res.statusCode).to.equal(204);
         done();
       });
   });
-
-
-
-
-
-
 });
-
-
-
-
-
-
-
-
-
-
-
