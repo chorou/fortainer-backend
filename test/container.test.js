@@ -16,7 +16,7 @@ const containerPayLoad = {
   "Image": "ubuntu"
 };
 
-describe('Containers list', () => {
+describe('Containers', () => {
   let containerId;
   let apiKey;
 
@@ -37,7 +37,7 @@ describe('Containers list', () => {
         }
         if (res.statusCode !== 201) {
           console.error('Error:', res.body);
-          return done(new Error('Failed to create container'));
+          return done(new Error('Failed to create container' + res));
         }
         containerId = res.body.Id;
         done();
