@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  API_KEY: "fortainer"
+  DOCKER_SOCKET: "/var/run/docker.sock"
+  PORT: "3000"
+  URL: "http://localhost:3000/docker-api/v1.43"
+
 jobs:
   build:
 
