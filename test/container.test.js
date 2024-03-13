@@ -36,7 +36,7 @@ describe('Containers', () => {
           return done(err);
         }
         if (res.statusCode !== 201) {
-          console.error('Error:', res.body);
+          console.error('Error:', res);
           return done(new Error('Failed to create container' + res));
         }
         containerId = res.body.Id;
