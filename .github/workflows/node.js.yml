@@ -40,7 +40,9 @@ jobs:
         sudo apt-get install -y docker-ce docker-ce-cli containerd.io
 
     - name: Start Docker Service
-      run: sudo service docker start
+      run: |
+        sudo service docker start
+        docker pull ubuntu
     - run: npm install
     - run: npm install --no-audit --prefer-offline --progress=false
     - run: npm run build --if-present
